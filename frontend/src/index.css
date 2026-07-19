@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.mg-in {
+  @apply w-full bg-surface2 border border-border rounded-lg px-3 py-2 mb-3 text-sm text-white outline-none focus:ring-2 focus:ring-amber;
+}
