@@ -6,7 +6,7 @@ from app.config import settings
 
 GEMINI_URL = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-2.5-flash:generateContent"
+    "gemini-3.5-flash:generateContent"
 )
 
 def _call_gemini(prompt: str) -> str:
