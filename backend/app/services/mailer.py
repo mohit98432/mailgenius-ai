@@ -21,7 +21,19 @@ def send_email(smtp_host: str, smtp_port: str, smtp_email: str, encrypted_passwo
             server.login(smtp_email, password)
             server.sendmail(smtp_email, [to_email], msg.as_string())
     else:
-        with smtplib.SMTP(smtp_host, port, timeout=20) as server:
-            server.starttls()
-            server.login(smtp_email, password)
-            server.sendmail(smtp_email, [to_email], msg.as_string())
+
+     print("Connecting to SMTP server...")
+
+     with smtplib.SMTP(smtp_host, port, timeout=20) as server:
+        server.set_debuglevel(1)
+
+        print("Connected to SMTP server")
+
+        server.starttls()
+        print("STARTTLS successful")
+
+        server.login(smtp_email, password)
+        print("Login successful")
+
+        server.sendmail(smtp_email, [to_email], msg.as_string())
+        print("Email sent successfully")
