@@ -4,10 +4,21 @@ from email.mime.text import MIMEText
 from app.security import decrypt_secret
 
 
-def send_email(smtp_host: str, smtp_port: str, smtp_email: str, encrypted_password: str,
-                to_email: str, subject: str, body: str) -> None:
-    """Sends a plaintext email over SMTP using an app-password style credential.
-    Raises on failure; caller is responsible for catching and recording the error."""
+import smtplib
+from email.mime.text import MIMEText
+
+from app.security import decrypt_secret
+
+
+def send_email(
+    smtp_host: str,
+    smtp_port: str,
+    smtp_email: str,
+    encrypted_password: str,
+    to_email: str,
+    subject: str,
+    body: str,
+) -> None:
     password = decrypt_secret(encrypted_password)
 
     msg = MIMEText(body)
@@ -16,24 +27,30 @@ def send_email(smtp_host: str, smtp_port: str, smtp_email: str, encrypted_passwo
     msg["To"] = to_email
 
     port = int(smtp_port)
+
     if port == 465:
         with smtplib.SMTP_SSL(smtp_host, port, timeout=20) as server:
             server.login(smtp_email, password)
             server.sendmail(smtp_email, [to_email], msg.as_string())
+
     else:
+        print("Connecting to SMTP server...")
 
-     print("Connecting to SMTP server...")
+        try:
+            with smtplib.SMTP(smtp_host, port, timeout=20) as server:
+                print("Connected!")
 
-     with smtplib.SMTP(smtp_host, port, timeout=20) as server:
-        server.set_debuglevel(1)
+                server.set_debuglevel(1)
 
-        print("Connected to SMTP server")
+                server.starttls()
+                print("TLS OK")
 
-        server.starttls()
-        print("STARTTLS successful")
+                server.login(smtp_email, password)
+                print("Login OK")
 
-        server.login(smtp_email, password)
-        print("Login successful")
+                server.sendmail(smtp_email, [to_email], msg.as_string())
+                print("Mail sent!")
 
-        server.sendmail(smtp_email, [to_email], msg.as_string())
-        print("Email sent successfully")
+        except Exception as e:
+            print("SMTP ERROR:", repr(e))
+            raise
