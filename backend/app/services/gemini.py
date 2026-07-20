@@ -15,6 +15,12 @@ def _call_gemini(prompt: str) -> str:
         json={"contents": [{"parts": [{"text": prompt}]}]},
         timeout=30,
     )
+    if not resp.ok:
+     print("=" * 80)
+     print("Gemini Status:", resp.status_code)
+     print("Gemini Response:")
+     print(resp.text)
+     print("=" * 80)
     resp.raise_for_status()
     data = resp.json()
     try:
