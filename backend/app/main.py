@@ -36,3 +36,17 @@ app.include_router(smtp_settings.router)
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/")
+def home():
+    return {
+        "message": "Welcome to MailGenius AI API",
+        "docs": "/docs"
+    }
+
+@app.get("/")
+def home():
+    return {
+        "message": "Welcome to MailGenius AI API",
+        "docs": "/docs"
+    }
